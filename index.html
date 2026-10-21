@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nonoluna</title>
+<meta name="description" content="Nonoluna is a cozy daily picture logic game: solve a little nonogram each evening and watch a hidden picture appear.">
+<meta name="theme-color" content="#29213B" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1B1623" media="(prefers-color-scheme: dark)">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="img/icon.png">
+<style>
+:root{
+  --bg:#FBF4EA;--bg2:#F2E6D2;--card:#FFFCF6;--line:#EADFCD;--ink:#5C4738;--soft:#74604F;
+  --accent:#E8895F;--accent-ink:#A84E2B;--chip:#FBE3D5;
+  --dusk1:#29213B;--dusk2:#4A3656;--dusk3:#9A5A62;--dusk4:#E9A07C;--on-dusk:#FFF6EA;--on-dusk-soft:#F3DCC9;
+  --shadow:0 1px 2px rgba(110,86,56,.06),0 12px 32px rgba(110,86,56,.10);
+  --radius:22px;
+  --font:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#1B1623;--bg2:#211A2B;--card:#2A2234;--line:#3B3147;--ink:#F4E8DA;--soft:#C9B7A6;
+  --accent:#F2A47F;--accent-ink:#F6B593;--chip:#3A2C3B;
+  --dusk1:#15111F;--dusk2:#2C2140;--dusk3:#5B3A54;--dusk4:#9A5E5C;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 32px rgba(0,0,0,.35);
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:linear-gradient(180deg,var(--bg),var(--bg2)) fixed;background-color:var(--bg);color:var(--ink);
+  font:17px/1.6 var(--font);-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-underline-offset:3px}
+a:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.narrow{max-width:760px}
+.skip{position:absolute;left:-999px}.skip:focus{left:16px;top:12px;z-index:9;background:var(--card);padding:8px 12px;border-radius:10px}
+header.bar{position:relative;z-index:2}
+header.bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:18px;padding-bottom:18px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;font-weight:800;font-size:20px;letter-spacing:-.01em}
+.brand svg{width:36px;height:36px;padding:4px;border-radius:10px;background:#2B2340}
+nav.top{display:flex;gap:6px;flex-wrap:wrap}
+nav.top a{text-decoration:none;font-weight:700;font-size:15px;padding:8px 12px;border-radius:999px;color:inherit}
+nav.top a:hover{background:color-mix(in srgb,var(--card) 70%,transparent)}
+nav.top a[aria-current]{background:var(--card);box-shadow:var(--shadow)}
+.on-dusk header.bar,.on-dusk header.bar a{color:var(--on-dusk)}
+.on-dusk nav.top a:hover{background:rgba(255,255,255,.12)}
+footer.foot{padding:40px 0 48px;color:var(--soft);font-size:15px}
+footer.foot .wrap{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:24px}
+footer.foot nav{display:flex;flex-wrap:wrap;gap:6px 18px}
+footer.foot a{color:inherit;font-weight:700}
+h1,h2,h3{line-height:1.2;letter-spacing:-.015em;margin:0}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px}
+@media (max-width:560px){.card{padding:22px 18px}}
+
+.hero{position:relative;overflow:hidden;color:var(--on-dusk);
+  background:
+    radial-gradient(1.5px 1.5px at 12% 18%,rgba(255,246,234,.9) 50%,transparent 51%),
+    radial-gradient(1px 1px at 28% 34%,rgba(255,246,234,.7) 50%,transparent 51%),
+    radial-gradient(1.5px 1.5px at 46% 12%,rgba(255,246,234,.8) 50%,transparent 51%),
+    radial-gradient(1px 1px at 63% 28%,rgba(255,246,234,.6) 50%,transparent 51%),
+    radial-gradient(1.5px 1.5px at 82% 16%,rgba(255,246,234,.85) 50%,transparent 51%),
+    radial-gradient(1px 1px at 90% 40%,rgba(255,246,234,.6) 50%,transparent 51%),
+    radial-gradient(1px 1px at 7% 48%,rgba(255,246,234,.5) 50%,transparent 51%),
+    linear-gradient(180deg,var(--dusk1) 0%,var(--dusk2) 42%,var(--dusk3) 76%,var(--dusk4) 100%);
+  padding-bottom:84px}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:70px;background:linear-gradient(180deg,transparent,var(--bg))}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1fr;gap:28px;align-items:center;padding-top:24px;text-align:center}
+.hero .moon{width:min(46vw,190px);height:auto;margin:0 auto;filter:drop-shadow(0 0 28px rgba(255,214,140,.45))}
+.hero h1{font-size:clamp(46px,11vw,84px);font-weight:900;letter-spacing:-.03em}
+.hero .tag{font-size:clamp(19px,3.6vw,24px);font-weight:800;color:#FFD9A6;margin:6px 0 14px}
+.hero .lead{font-size:clamp(17px,2.6vw,20px);color:var(--on-dusk-soft);max-width:30em;margin:0 auto 26px}
+.store{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:16px;color:#2B1B12;background:#FFF1DE;
+  border-radius:999px;padding:14px 24px;box-shadow:0 10px 30px rgba(20,10,30,.35)}
+.store small{display:block;font-weight:700;font-size:12px;opacity:.7;line-height:1.1}
+.store span{display:block;line-height:1.15;text-align:left}
+.store svg{width:22px;height:22px}
+.facts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px;padding:0;list-style:none}
+.facts li{font-size:14px;font-weight:700;color:var(--on-dusk);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:5px 12px}
+@media (min-width:860px){
+  .hero-grid{grid-template-columns:1.15fr .85fr;text-align:left;padding-top:40px}
+  .hero .lead{margin-left:0}
+  .facts{justify-content:flex-start}
+  .hero .moon{width:300px;order:2}
+}
+.shots{padding:8px 0 24px}
+.shots h2,.features h2{font-size:clamp(26px,4.4vw,36px);font-weight:900;text-align:center}
+.sub{text-align:center;color:var(--soft);margin:8px auto 28px;max-width:34em}
+.shot-row{display:grid;grid-auto-flow:column;grid-auto-columns:min(68vw,280px);gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding:6px 20px 18px;margin:0 -20px;scrollbar-width:none}
+.shot-row::-webkit-scrollbar{display:none}
+.shot-row figure{margin:0;scroll-snap-align:center}
+.shot-row img{display:block;width:100%;height:auto;border-radius:26px;box-shadow:var(--shadow);background:var(--card)}
+.shot-row figcaption{font-size:14px;font-weight:700;color:var(--soft);text-align:center;margin-top:10px}
+@media (min-width:700px){.shot-row{grid-auto-flow:row;grid-template-columns:repeat(3,1fr);overflow:visible;margin:0;padding:6px 0 18px}}
+.features{padding:40px 0 16px}
+.grid{display:grid;gap:16px;grid-template-columns:1fr}
+@media (min-width:640px){.grid{grid-template-columns:1fr 1fr}}
+.feature{display:flex;gap:16px;align-items:flex-start}
+.feature .ico{flex:none;width:48px;height:48px;border-radius:14px;background:var(--chip);display:grid;place-items:center}
+.feature .ico svg{width:26px;height:26px}
+.feature h3{font-size:19px;margin:2px 0 6px}
+.feature p{margin:0;color:var(--soft)}
+.closing{text-align:center;padding:48px 0 8px}
+.closing p{color:var(--soft);margin:10px 0 0}
+</style>
+</head>
+<body class="on-dusk">
+<div class="hero">
+<a class="skip" href="#main">Skip to content</a>
+<header class="bar"><div class="wrap">
+  <a class="brand" href=""><svg class="mark" viewBox="0 0 120 120" aria-hidden="true"><rect x="31" y="1" width="8" height="8" rx="2.2" fill="#ffe9a8"/><rect x="41" y="1" width="8" height="8" rx="2.2" fill="#ffe9a8"/><rect x="51" y="1" width="8" height="8" rx="2.2" fill="#f1c87b"/><rect x="21" y="11" width="8" height="8" rx="2.2" fill="#ffe9a8"/><rect x="31" y="11" width="8" height="8" rx="2.2" fill="#ffe69e"/><rect x="41" y="11" width="8" height="8" rx="2.2" fill="#f2c268"/><rect x="51" y="11" width="8" height="8" rx="2.2" fill="#e19f40"/><rect x="81" y="11" width="8" height="8" rx="2.2" fill="#ffe28c"/><rect x="11" y="21" width="8" height="8" rx="2.2" fill="#ffe9a8"/><rect x="21" y="21" width="8" height="8" rx="2.2" fill="#ffe08e"/><rect x="31" y="21" width="8" height="8" rx="2.2" fill="#fbca60"/><rect x="41" y="21" width="8" height="8" rx="2.2" fill="#e7a845"/><rect x="71" y="21" width="8" height="8" rx="2.2" fill="#ffe28c"/><rect x="81" y="21" width="8" height="8" rx="2.2" fill="#fff4cf"/><rect x="91" y="21" width="8" height="8" rx="2.2" fill="#ffe28c"/><rect x="11" y="31" width="8" height="8" rx="2.2" fill="#ffe499"/><rect x="21" y="31" width="8" height="8" rx="2.2" fill="#ffd266"/><rect x="31" y="31" width="8" height="8" rx="2.2" fill="#f4bf57"/><rect x="41" y="31" width="8" height="8" rx="2.2" fill="#df9a3a"/><rect x="81" y="31" width="8" height="8" rx="2.2" fill="#ffe28c"/><rect x="1" y="41" width="8" height="8" rx="2.2" fill="#ffe9a8"/><rect x="11" y="41" width="8" height="8" rx="2.2" fill="#ffda7d"/><rect x="21" y="41" width="8" height="8" rx="2.2" fill="#ffd266"/><rect x="31" y="41" width="8" height="8" rx="2.2" fill="#f2bb54"/><rect x="1" y="51" width="8" height="8" rx="2.2" fill="#ffe9a8"/><rect x="11" y="51" width="8" height="8" rx="2.2" fill="#ffd56f"/><rect x="21" y="51" width="8" height="8" rx="2.2" fill="#ffd266"/><rect x="31" y="51" width="8" height="8" rx="2.2" fill="#f3bd55"/><rect x="1" y="61" width="8" height="8" rx="2.2" fill="#ffe9a8"/><rect x="11" y="61" width="8" height="8" rx="2.2" fill="#ffd56e"/><rect x="21" y="61" width="8" height="8" rx="2.2" fill="#fed064"/><rect x="31" y="61" width="8" height="8" rx="2.2" fill="#f7c45b"/><rect x="91" y="61" width="8" height="8" rx="2.2" fill="#ffe28c"/><rect x="1" y="71" width="8" height="8" rx="2.2" fill="#ffe9a7"/><rect x="11" y="71" width="8" height="8" rx="2.2" fill="#fed879"/><rect x="21" y="71" width="8" height="8" rx="2.2" fill="#fdce62"/><rect x="31" y="71" width="8" height="8" rx="2.2" fill="#fccd60"/><rect x="41" y="71" width="8" height="8" rx="2.2" fill="#edb34c"/><rect x="11" y="81" width="8" height="8" rx="2.2" fill="#fedf8d"/><rect x="21" y="81" width="8" height="8" rx="2.2" fill="#fccd60"/><rect x="31" y="81" width="8" height="8" rx="2.2" fill="#fbcb5e"/><rect x="41" y="81" width="8" height="8" rx="2.2" fill="#f8c75a"/><rect x="51" y="81" width="8" height="8" rx="2.2" fill="#ebaf48"/><rect x="61" y="81" width="8" height="8" rx="2.2" fill="#e09c3b"/><rect x="101" y="81" width="8" height="8" rx="2.2" fill="#edb554"/><rect x="11" y="91" width="8" height="8" rx="2.2" fill="#fee192"/><rect x="21" y="91" width="8" height="8" rx="2.2" fill="#fcd679"/><rect x="31" y="91" width="8" height="8" rx="2.2" fill="#faca5c"/><rect x="41" y="91" width="8" height="8" rx="2.2" fill="#f9c85a"/><rect x="51" y="91" width="8" height="8" rx="2.2" fill="#f8c658"/><rect x="61" y="91" width="8" height="8" rx="2.2" fill="#efb64d"/><rect x="71" y="91" width="8" height="8" rx="2.2" fill="#e9ac46"/><rect x="81" y="91" width="8" height="8" rx="2.2" fill="#e7a844"/><rect x="91" y="91" width="8" height="8" rx="2.2" fill="#e8ac4b"/><rect x="21" y="101" width="8" height="8" rx="2.2" fill="#fdda83"/><rect x="31" y="101" width="8" height="8" rx="2.2" fill="#fbd476"/><rect x="41" y="101" width="8" height="8" rx="2.2" fill="#f9cc65"/><rect x="51" y="101" width="8" height="8" rx="2.2" fill="#f9c85d"/><rect x="61" y="101" width="8" height="8" rx="2.2" fill="#f9c85e"/><rect x="71" y="101" width="8" height="8" rx="2.2" fill="#f9ca63"/><rect x="81" y="101" width="8" height="8" rx="2.2" fill="#face6b"/><rect x="41" y="111" width="8" height="8" rx="2.2" fill="#face6b"/><rect x="51" y="111" width="8" height="8" rx="2.2" fill="#face6b"/><rect x="61" y="111" width="8" height="8" rx="2.2" fill="#face6b"/></svg><span>Nonoluna</span></a>
+  <nav class="top" aria-label="Site"><a href="privacy/">Privacy</a><a href="support/">Support</a></nav>
+</div></header>
+
+<main id="main">
+<div class="wrap hero-grid">
+  <svg class="moon" viewBox="0 0 120 120" role="img" aria-label="A crescent moon drawn in little squares"><rect x="31" y="1" width="8" height="8" rx="2.2" fill="#ffe9a8"/><rect x="41" y="1" width="8" height="8" rx="2.2" fill="#ffe9a8"/><rect x="51" y="1" width="8" height="8" rx="2.2" fill="#f1c87b"/><rect x="21" y="11" width="8" height="8" rx="2.2" fill="#ffe9a8"/><rect x="31" y="11" width="8" height="8" rx="2.2" fill="#ffe69e"/><rect x="41" y="11" width="8" height="8" rx="2.2" fill="#f2c268"/><rect x="51" y="11" width="8" height="8" rx="2.2" fill="#e19f40"/><rect x="81" y="11" width="8" height="8" rx="2.2" fill="#ffe28c"/><rect x="11" y="21" width="8" height="8" rx="2.2" fill="#ffe9a8"/><rect x="21" y="21" width="8" height="8" rx="2.2" fill="#ffe08e"/><rect x="31" y="21" width="8" height="8" rx="2.2" fill="#fbca60"/><rect x="41" y="21" width="8" height="8" rx="2.2" fill="#e7a845"/><rect x="71" y="21" width="8" height="8" rx="2.2" fill="#ffe28c"/><rect x="81" y="21" width="8" height="8" rx="2.2" fill="#fff4cf"/><rect x="91" y="21" width="8" height="8" rx="2.2" fill="#ffe28c"/><rect x="11" y="31" width="8" height="8" rx="2.2" fill="#ffe499"/><rect x="21" y="31" width="8" height="8" rx="2.2" fill="#ffd266"/><rect x="31" y="31" width="8" height="8" rx="2.2" fill="#f4bf57"/><rect x="41" y="31" width="8" height="8" rx="2.2" fill="#df9a3a"/><rect x="81" y="31" width="8" height="8" rx="2.2" fill="#ffe28c"/><rect x="1" y="41" width="8" height="8" rx="2.2" fill="#ffe9a8"/><rect x="11" y="41" width="8" height="8" rx="2.2" fill="#ffda7d"/><rect x="21" y="41" width="8" height="8" rx="2.2" fill="#ffd266"/><rect x="31" y="41" width="8" height="8" rx="2.2" fill="#f2bb54"/><rect x="1" y="51" width="8" height="8" rx="2.2" fill="#ffe9a8"/><rect x="11" y="51" width="8" height="8" rx="2.2" fill="#ffd56f"/><rect x="21" y="51" width="8" height="8" rx="2.2" fill="#ffd266"/><rect x="31" y="51" width="8" height="8" rx="2.2" fill="#f3bd55"/><rect x="1" y="61" width="8" height="8" rx="2.2" fill="#ffe9a8"/><rect x="11" y="61" width="8" height="8" rx="2.2" fill="#ffd56e"/><rect x="21" y="61" width="8" height="8" rx="2.2" fill="#fed064"/><rect x="31" y="61" width="8" height="8" rx="2.2" fill="#f7c45b"/><rect x="91" y="61" width="8" height="8" rx="2.2" fill="#ffe28c"/><rect x="1" y="71" width="8" height="8" rx="2.2" fill="#ffe9a7"/><rect x="11" y="71" width="8" height="8" rx="2.2" fill="#fed879"/><rect x="21" y="71" width="8" height="8" rx="2.2" fill="#fdce62"/><rect x="31" y="71" width="8" height="8" rx="2.2" fill="#fccd60"/><rect x="41" y="71" width="8" height="8" rx="2.2" fill="#edb34c"/><rect x="11" y="81" width="8" height="8" rx="2.2" fill="#fedf8d"/><rect x="21" y="81" width="8" height="8" rx="2.2" fill="#fccd60"/><rect x="31" y="81" width="8" height="8" rx="2.2" fill="#fbcb5e"/><rect x="41" y="81" width="8" height="8" rx="2.2" fill="#f8c75a"/><rect x="51" y="81" width="8" height="8" rx="2.2" fill="#ebaf48"/><rect x="61" y="81" width="8" height="8" rx="2.2" fill="#e09c3b"/><rect x="101" y="81" width="8" height="8" rx="2.2" fill="#edb554"/><rect x="11" y="91" width="8" height="8" rx="2.2" fill="#fee192"/><rect x="21" y="91" width="8" height="8" rx="2.2" fill="#fcd679"/><rect x="31" y="91" width="8" height="8" rx="2.2" fill="#faca5c"/><rect x="41" y="91" width="8" height="8" rx="2.2" fill="#f9c85a"/><rect x="51" y="91" width="8" height="8" rx="2.2" fill="#f8c658"/><rect x="61" y="91" width="8" height="8" rx="2.2" fill="#efb64d"/><rect x="71" y="91" width="8" height="8" rx="2.2" fill="#e9ac46"/><rect x="81" y="91" width="8" height="8" rx="2.2" fill="#e7a844"/><rect x="91" y="91" width="8" height="8" rx="2.2" fill="#e8ac4b"/><rect x="21" y="101" width="8" height="8" rx="2.2" fill="#fdda83"/><rect x="31" y="101" width="8" height="8" rx="2.2" fill="#fbd476"/><rect x="41" y="101" width="8" height="8" rx="2.2" fill="#f9cc65"/><rect x="51" y="101" width="8" height="8" rx="2.2" fill="#f9c85d"/><rect x="61" y="101" width="8" height="8" rx="2.2" fill="#f9c85e"/><rect x="71" y="101" width="8" height="8" rx="2.2" fill="#f9ca63"/><rect x="81" y="101" width="8" height="8" rx="2.2" fill="#face6b"/><rect x="41" y="111" width="8" height="8" rx="2.2" fill="#face6b"/><rect x="51" y="111" width="8" height="8" rx="2.2" fill="#face6b"/><rect x="61" y="111" width="8" height="8" rx="2.2" fill="#face6b"/></svg>
+  <div>
+    <h1>Nonoluna</h1>
+    <p class="tag">Cozy Daily Picture Logic</p>
+    <p class="lead">Solve a little picture puzzle each evening and watch a hidden picture appear.</p>
+    <a id="appstore-link" class="store" href="#" aria-disabled="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3.1-5.4 3.1 1.2-6L3.3 8.8l6.1-.7z"/></svg><span><small>Coming soon to the</small>App Store</span></a>
+    <ul class="facts"><li>iPhone &amp; iPad</li><li>10 languages</li><li>Works offline</li><li>No account</li></ul>
+  </div>
+</div>
+</div>
+
+<section class="shots" aria-labelledby="shots-h"><div class="wrap">
+  <h2 id="shots-h">A quiet little ritual</h2>
+  <p class="sub">Use the numbers beside each row and column to fill the right squares. Every puzzle hides a picture.</p>
+  <div class="shot-row">
+    <figure><img src="img/shot-1.jpg" width="635" height="1380" alt="The Journey map: a winding path of picture puzzles through a chapter called Cozy Kitchen" loading="lazy"></figure>
+    <figure><img src="img/shot-2.jpg" width="635" height="1380" alt="An 11 by 11 color puzzle half solved, with row and column clues" loading="lazy"><figcaption>Color puzzles unlock as you play</figcaption></figure>
+    <figure><img src="img/shot-3.jpg" width="635" height="1380" alt="A solved puzzle revealing a boxing glove, with three stars" loading="lazy"></figure>
+  </div>
+</div></section>
+
+<section class="features" aria-labelledby="feat-h"><div class="wrap">
+  <h2 id="feat-h">Made to relax</h2>
+  <p class="sub">A calm nonogram game, also known as paint-by-numbers logic.</p>
+  <div class="grid">
+    <div class="card feature"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="var(--accent-ink)" d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM15 15h3v3h-3z"/></svg></span><div><h3>Pure logic, no guessing</h3><p>Every puzzle is checked to have exactly one solution you can reach by reasoning alone. Harder boards ask for careful “what if” reasoning: still logic, never luck.</p></div></div>
+    <div class="card feature"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="var(--accent-ink)" d="M12 20.5l-1.4-1.3C5.4 14.5 2 11.4 2 7.6 2 4.5 4.4 2 7.5 2c1.7 0 3.4.8 4.5 2.1C13.1 2.8 14.8 2 16.5 2 19.6 2 22 4.5 22 7.6c0 3.8-3.4 6.9-8.6 11.6z"/></svg></span><div><h3>Gentle by design</h3><p>No timers rushing you. Gentle hearts forgive a slip and come back as you make good moves.</p></div></div>
+    <div class="card feature"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="var(--accent-ink)" d="M14.5 2.5a9.5 9.5 0 1 0 7 15.9A8 8 0 0 1 14.5 2.5z"/></svg></span><div><h3>Something new every day</h3><p>A new daily puzzle every morning, and a Home Screen widget for today's picture.</p></div></div>
+    <div class="card feature"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="var(--accent-ink)" d="M7 10V7a5 5 0 0 1 10 0v3h1.5A1.5 1.5 0 0 1 20 11.5v9A1.5 1.5 0 0 1 18.5 22h-13A1.5 1.5 0 0 1 4 20.5v-9A1.5 1.5 0 0 1 5.5 10zm2 0h6V7a3 3 0 0 0-6 0z"/></svg></span><div><h3>Yours alone</h3><p>No account, no ads, no tracking. Your progress stays on your device. <a href="privacy/">Read the privacy policy</a>.</p></div></div>
+  </div>
+  <div class="closing" id="more"><h2>Pour a cup of tea and start filling squares.</h2><p>Questions? <a href="support/">Visit support</a> or write to <a href="mailto:serkan@cronime.com">serkan@cronime.com</a>.</p></div>
+</div></section>
+</main>
+<footer class="foot"><div class="wrap">
+  <nav aria-label="Footer"><a href="">Home</a><a href="privacy/">Privacy Policy</a><a href="support/">Support</a><a href="press.html">Press</a><a href="mailto:serkan@cronime.com">serkan@cronime.com</a></nav>
+  <span>© 2026 Cronime Ltd</span>
+</div></footer>
+</body>
+</html>
